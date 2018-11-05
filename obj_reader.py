@@ -1,23 +1,28 @@
 
-class file():
-    def __init__(self):
+class file_obj():
+    def __init__(self, file_name):
         # Listas
-        vertices = []
-        faces = []
-
-        file = open('hammer.obj', 'r')
+        self.vertices = []
+        self.faces = []
 
 
-    def linha_vertice(line):
+        try:
+            self.file = open(file_name, 'r')
+        except Exception as e:
+            print("Arquivo não encontrado.")
+            raise
+
+
+
+    def linha_vertice(self,line):
         if line[0] == 'v':
             linha = str(line).split(' ')
             if len(linha) == 5:
                 tipo, _,x, y,z = linha
-                #print(tipo,x, y, z)
-                return float(x),float(y),float(z)
+                return x,y,z
 
 
-    def linha_face(line):
+    def linha_face(self,line):
         if line[0] == 'f':
 
             linha = str(line).split(' ')
@@ -27,19 +32,17 @@ class file():
 
 
     def leitura_obj(self):
-        for line in file.readlines():
-            if linha_vertice(line) is not None:
-                vertices.append(linha_vertice(line))
-            if linha_face(line) is not None:
-                vertices.append(linha_face(line))
-        print(vertices)
-        print(faces)
-a = file()
+        for line in self.file.readlines():
+            if self.linha_vertice(line) is not None:
+                self.vertices.append(self.linha_vertice(line))
+            if self.linha_face(line) is not None:
+                self.faces.append(self.linha_face(line))
 
 
-a.leitura_obj()
+    def escreve_obj(self, file_name):
+        file_write = open(file_name, 'w')
 
-
-
-    # for line in file:
-    #      print(str(line[0:2]))
+        for line in self.vertices:
+            file_write.write('v ' + str(line[0]) + ' ' + str(line[1]) + ' ' + str(line[2]))
+        for line in self.faces:
+            file_write.write('f ' + str(line[0]) + ' ' + str(line[1]) + ' ' + str(line[2]) + '\n')
